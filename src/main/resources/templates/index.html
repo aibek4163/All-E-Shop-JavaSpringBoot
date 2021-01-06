@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html">
+    <div class="container mt-4" layout:fragment="site_content" >
+        <div class="row">
+            <div class="col-3 pl-0">
+<!--                <div class="card" style="width:100%">-->
+<!--                    <div class="card-header text-white" style="background-color: #156145" th:text="#{label.category}">-->
+<!--                    </div>-->
+<!--                    <ul class="list-group list-group-flush mx-auto">-->
+<!--                        <li class="list-group-item"><i class="fas fa-shopping-cart"><span class="pl-2" th:text="#{label.AllItems}"></span></i></li>-->
+<!--                        <li class="list-group-item"><i class="fas fa-mobile-alt"><span class="pl-2" th:text="#{label.Phones}+', '+#{label.Gadgets}"></span></i></li>-->
+<!--                        <li class="list-group-item"><i class="fas fa-tv"><span class="pl-2" th:text="#{label.Televisions}+', '+#{label.Audio}+', '+#{label.Video}"></span></i></li>-->
+<!--                        <li class="list-group-item"><i class="fas fa-gamepad"><span class="pl-2" th:text="#{label.ForGamers}"></span></i></li>-->
+<!--                        <li class="list-group-item"><i class="fas fa-dolly-flatbed"><span class="pl-2" th:text="#{label.Other}"></span></i></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+                <div class="card" style="width:100%">
+                    <div class="card-header text-white" style="background-color: #156145" th:text="#{label.brand}">
+                    </div>
+                    <ul class="list-group list-group-flush" th:each="b:${brands}">
+                        <li class="list-group-item"><a th:href="@{'/detailed_search?'+${'search_brand='}+${b.getName()}}" th:text="${b.getName()}"></a></li>
+                    </ul>
+                </div>
+                <div class="card mt-4" style="width:100%">
+                    <div class="card-header text-white" style="background-color: #156145" th:text="#{label.payment}">
+                    </div>
+                    <ul class="list-group list-group-flush d-flex flex-row mx-auto" style="color: #156145;text-align: center">
+                        <li class="list-group-item p-2"><i class="fab fa-cc-apple-pay fa-3x"></i></li>
+                        <li class="list-group-item p-2"><i class="fab fa-cc-visa fa-3x"></i></li>
+                        <li class="list-group-item p-2"><i class="fab fa-cc-paypal fa-3x"></i></li>
+                    </ul>
+                    <ul class="list-group list-group-flush  d-flex flex-row mx-auto" style="color: #156145">
+                        <li class="list-group-item p-2"><i class="fab fa-cc-amazon-pay fa-3x"></i></li>
+                        <li class="list-group-item p-2"><i class="fab fa-cc-mastercard fa-3x"></i></li>
+                        <li class="list-group-item p-2"><i class="fab fa-cc-amex fa-3x"></i></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-9">
+                <form th:action="@{'/search'}" method="get" class="form-inline col-12 pl-0 pr-0 mb-3 justify-content-between">
+                    <input type="text" class="form-control col-8" th:placeholder="#{label.placeholder}" name="name">
+                    <button class="col-3 btn text-white" style="background-color: #156145" th:text="#{button.search}"></button>
+                </form>
+                <div id="carouselExampleCaptions" class="carousel slide w-100" data-ride="carousel" >
+                    <ol class="carousel-indicators">
+                        <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+                        <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner" style="height:350px">
+                        <div class="carousel-oldItem active">
+                            <img src="https://instagram.fala4-1.fna.fbcdn.net/v/t51.2885-15/e35/121078528_3614964225193789_1399455023701823187_n.jpg?_nc_ht=instagram.fala4-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=ppatA3wYEEkAX-iruGq&tp=1&oh=9a47715e9ed5761263c68a45bdcc3420&oe=600A57CF" height="350" class="d-block w-100" alt="...">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5 th:text="#{label.carousel}"></h5>
+                                <p th:text="#{label.sub_carousel}"></p>
+                            </div>
+                        </div>
+                        <div class="carousel-oldItem">
+                            <img src="https://instagram.fala4-2.fna.fbcdn.net/v/t51.2885-15/e35/p1080x1080/120108816_121397406167591_3035852694750710310_n.jpg?_nc_ht=instagram.fala4-2.fna.fbcdn.net&_nc_cat=111&_nc_ohc=-LSQ5U9zEbMAX-77NbE&tp=1&oh=a8316f06a758f6f2354d14d752b1f4ea&oe=600A1043" height="350" class="d-block w-100" alt="...">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5 th:text="#{label.carousel}"></h5>
+                                <p th:text="#{label.sub_carousel}"></p>
+                            </div>
+                        </div>
+                        <div class="carousel-oldItem">
+                            <img src="https://instagram.fala4-1.fna.fbcdn.net/v/t51.2885-15/e35/119466526_3430587407002525_9065757176878209756_n.jpg?_nc_ht=instagram.fala4-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=McTHRgKAWDoAX_oEzD2&tp=1&oh=cee077e1f7659a3e41b6c45fc1c8cf97&oe=60099EE2" height="350" class="d-block w-100" alt="...">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5 th:text="#{label.carousel}"></h5>
+                                <p th:text="#{label.sub_carousel}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev" >
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next" >
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+                <div class="oldItems mt-4">
+                    <div class="card-deck">
+                        <div class="card mb-3" th:each="it:${items}" style="max-width:254px;min-width: 220px">
+                            <img th:src="${it.getSmall_picture_url()}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <a th:href="@{'/details/'+${it.getId()}}"><h5 class="card-title" th:text="${it.getName()}"></h5></a>
+                                <h5 class="card-title" th:text="${it.getPrice()}"></h5>
+                                <p class="card-text" th:text="${it.getDescription()}"></p>
+                                <a th:href="@{'/detailed_search?'+${'search_brand='}+${it.getBrand().getName()}}"><p class="card-text strong" th:text="${it.getBrand().getName()}"></p></a>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted"  th:if="${it.getStars()==5}" th:each="i:${#numbers.sequence(0,4)}"><i class="fas fa-star"></i></small>
+                                <small class="text-muted"  th:if="${it.getStars()==4}" th:each="i:${#numbers.sequence(0,3)}"><i class="fas fa-star"></i></small>
+                                <small class="text-muted"  th:if="${it.getStars()==3}" th:each="i:${#numbers.sequence(0,2)}"><i class="fas fa-star"></i></small>
+                                <small class="text-muted"  th:if="${it.getStars()==2}" th:each="i:${#numbers.sequence(0,1)}"><i class="fas fa-star"></i></small>
+                                <small class="text-muted"  th:if="${it.getStars()==1}" th:each="i:${#numbers.sequence(0,0)}"><i class="fas fa-star"></i></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>

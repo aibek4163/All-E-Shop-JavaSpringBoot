@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/admin.html">
+<div class="col-9" layout:fragment="site_content">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+        <h1 class="h2" th:text="#{label.brand}"></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addBrand" th:text="#{button.add}">
+            </button>
+        </div>
+    </div>
+    <div class="modal fade" id="addBrand" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form th:action="@{'/add_brand'}" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel1" th:text="#{label.addBrand}"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label th:text="#{label.name}"></label>
+                            <input type="text" name="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.country}">
+                            </label>
+                            <select name="country" class="form-control">
+                                <option th:each="c:${countries}" th:text="${c.getName() + ' - ' + c.getCode()}" th:value="${c.getId()}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{label.close}"></button>
+                        <button  class="btn btn-success" name="add_item" value="add" th:text="#{button.add}"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive-xl">
+        <table class="table table-striped">
+            <thead>
+            <tr style="text-align: center;">
+                <th>ID</th>
+                <th th:text="#{label.name}"></th>
+                <th th:text="#{label.country}"></th>
+                <th th:text="#{label.operation}"></th>
+            </tr>
+            </thead>
+            <tbody style="text-align: center;" th:each="b:${brands}">
+            <tr>
+                <td th:text="${b.getId()}"></td>
+                <td th:text="${b.getName()}"></td>
+                <td th:text="${b.getCountry().getName()}"></td>
+                <td>
+                    <button type="button"  class="btn-sm btn-success" data-toggle="modal" data-target="#editBrand" th:attrappend="data-target=${b.getId()}" th:text="#{label.edit}">
+                    </button>
+                    <button type="button"  class="btn-sm btn-danger" data-toggle="modal" data-target="#deleteBrand" th:attrappend="data-target=${b.getId()}" th:text="#{button.delete}">
+                    </button>
+                </td>
+                <!-- Modal Edit -->
+                <div class="modal fade" id="editBrand" th:attrappend="id=${b.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form th:action="@{'/edit_brand'}" method="post">
+                            <input type="hidden" name="brand_id" th:value="${b.getId()}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel2" th:text="#{label.editItem}"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label th:text="#{label.name}">
+
+                                        </label>
+                                        <input type="text" class="form-control" name="name" th:value="${b.getName()}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.country}">
+                                        </label>
+                                        <select name="country" class="form-control">
+                                            <option th:each="c:${countries}" th:text="${c.getName() + ' - ' + c.getCode()}" th:value="${c.getId()}" th:selected="${b.getCountry().getId()==c.getId()}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{label.close}"></button>
+                                    <button type="submit" class="btn btn-success" name="edit_btn" value="edit" th:text="#{label.edit}"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Modal Delete -->
+                <div class="modal fade" id="deleteBrand" th:attrappend="id=${b.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form th:action="@{'/delete_brand'}" method="post">
+                            <input type="hidden" name="brand_id" th:value="${b.getId()}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel3"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" th:text="#{button.delete}+' '+${b.getName()}+'?'">
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.close}"></button>
+                                    <button  class="btn btn-primary" name="delete_btn" value="delete" th:text="#{label.yes}">Yes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/admin.html">
+<div class="col-9" layout:fragment="site_content">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+        <h1 class="h2" th:text="#{label.category}"></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addCategory" th:text="#{button.add}">
+            </button>
+        </div>
+    </div>
+    <div class="modal fade" id="addCategory" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form th:action="@{'/add_category'}" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel1" th:text="#{label.addCategory}"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label th:text="#{label.name}"></label>
+                            <input type="text" name="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.logoURL}"></label>
+                            <input type="text" name="logo" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{label.close}"></button>
+                        <button  class="btn btn-success" name="add_item" value="add" th:text="#{button.add}"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive-xl">
+        <table class="table table-striped">
+            <thead>
+            <tr style="text-align: center;">
+                <th>ID</th>
+                <th th:text="#{label.name}"></th>
+                <th th:text="#{label.logoURL}"></th>
+                <th th:text="#{label.operation}"></th>
+            </tr>
+            </thead>
+            <tbody style="text-align: center;" th:each="it:${categories}">
+            <tr>
+                <td th:text="${it.getId()}"></td>
+                <td th:text="${it.getName()}"></td>
+                <td><img width="10%" th:src="${it.getLogoURL()}"></td>
+                <td>
+                    <button type="button"  class="btn-sm btn-success" data-toggle="modal" data-target="#editItem" th:attrappend="data-target=${it.getId()}" th:text="#{label.edit}">
+                    </button>
+                    <button type="button"  class="btn-sm btn-danger" data-toggle="modal" data-target="#deleteItem" th:attrappend="data-target=${it.getId()}" th:text="#{button.delete}">
+                    </button>
+                </td>
+                <!-- Modal Edit -->
+                <div class="modal fade" id="editItem" th:attrappend="id=${it.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form th:action="@{'/edit_category'}" method="post">
+                            <input type="hidden" name="category_id" th:value="${it.getId()}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel_edit" th:text="#{label.editCategory}"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label th:text="#{label.name}"></label>
+                                        <input type="text" class="form-control" name="name" th:value="${it.getName()}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.logoURL}"></label>
+                                        <input type="text" name="logoURL" class="form-control" th:value="${it.getLogoURL()}">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{label.close}"></button>
+                                    <button type="submit" class="btn btn-success" name="edit_btn" value="edit" th:text="#{label.edit}"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Modal Delete -->
+                <div class="modal fade" id="deleteItem" th:attrappend="id=${it.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form th:action="@{'/delete_category'}" method="post">
+                            <input type="hidden" name="category_id" th:value="${it.getId()}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel_delete"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" th:text="#{button.delete}+' '+${it.getName()}+'?'">
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.close}"></button>
+                                    <button  class="btn btn-primary" name="delete_btn" value="delete" th:text="#{label.yes}">Yes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</html>

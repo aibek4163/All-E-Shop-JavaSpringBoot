@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/admin.html">
+<div class="col-9" layout:fragment="site_content">
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+        <h1 class="h2" th:text="#{label.purchaseDetails}"></h1>
+    </div>
+
+
+
+    <div class="table-responsive-xl">
+        <table class="table table-striped">
+            <thead>
+            <tr style="text-align: center;">
+                <th>ID</th>
+                <th th:text="#{label.item}"></th>
+                <th th:text="#{label.SoldDate}"></th>
+                <th th:text="#{label.amount}"></th>
+                <th th:text="#{label.operation}"></th>
+            </tr>
+            </thead>
+            <tbody style="text-align: center;" th:each="it,iStat:${purchaseDetails}" >
+            <tr >
+                <td th:text="${it.getId()}"></td>
+                <td th:text="${it.getItem().getName()}"></td>
+                <td>
+                    <span th:text="${#dates.day(it.getBuyed_date())}"></span>.<span th:text="${#dates.month(it.getBuyed_date())}"></span>.<span th:text="${#dates.year(it.getBuyed_date())}"></span> - <span th:text="${#dates.hour(it.getBuyed_date())}"></span>:<span th:text="${#dates.minute(it.getBuyed_date())}"></span>:<span th:text="${#dates.second(it.getBuyed_date())}"></span>
+                </td>
+                <td th:text="${it.getAmount()}"></td>
+                <td>
+<!--                    <button type="button"  class="btn-sm btn-success" data-toggle="modal" data-target="#editItem" th:attrappend="data-target=${it.getId()}" th:text="#{label.edit}">-->
+<!--                    </button>-->
+<!--                    <a class="btn-sm btn-primary" th:href="@{'/edit_user_details/'+${it.getId()}}" th:text="#{label.edit}"></a>-->
+                    <button type="button"  class="btn-sm btn-danger" data-toggle="modal" data-target="#deleteItem" th:attrappend="data-target=${it.getId()}" th:text="#{button.delete}">
+                    </button>
+                </td>
+                <!-- Modal Edit -->
+                <div class="modal fade" id="editItem" th:attrappend="id=${it.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form th:action="@{'/edit_user'}" method="post">
+                            <input type="hidden" name="id" th:value="${it.getId()}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel_edit" th:text="#{label.editUser}"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label th:text="#{label.FullName}"></label>
+                                        <input type="text" class="form-control" name="user_name" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.password}"></label>
+                                        <input type="text" name="user_password" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{label.close}"></button>
+                                    <button type="submit" class="btn btn-success" name="edit_btn" value="edit" th:text="#{label.edit}"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Modal Delete -->
+                <div class="modal fade" id="deleteItem" th:attrappend="id=${it.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form th:action="@{'/delete_user'}" method="post">
+                            <input type="hidden" name="id" th:value="${it.getId()}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel_delete"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" th:text="#{button.delete}+' '+${it.getItem().getName()}+'?'">
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.close}"></button>
+                                    <button  class="btn btn-primary" name="delete_btn" value="delete" th:text="#{label.yes}">Yes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</body>
+</html>

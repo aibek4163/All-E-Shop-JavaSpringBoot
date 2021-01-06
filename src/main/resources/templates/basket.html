@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html">
+    <div class="container mt-4" layout:fragment="site_content" >
+        <div class="row">
+            <div class="col-3 pl-0">
+                <div class="card" style="width:100%">
+                    <div class="card-header text-white" style="background-color: #156145" th:text="#{label.brand}">
+                    </div>
+                    <ul class="list-group list-group-flush" th:each="b:${brands}">
+                        <li class="list-group-item"><a th:href="@{'/detailed_search?'+${'search_brand='}+${b.getName()}}" th:text="${b.getName()}"></a></li>
+                    </ul>
+                </div>
+                <div class="card mt-4" style="width:100%">
+                    <div class="card-header text-white" style="background-color: #156145" th:text="#{label.payment}">
+                    </div>
+                    <ul class="list-group list-group-flush d-flex flex-row mx-auto" style="color: #156145;text-align: center">
+                        <li class="list-group-item p-2"><i class="fab fa-cc-apple-pay fa-3x"></i></li>
+                        <li class="list-group-item p-2"><i class="fab fa-cc-visa fa-3x"></i></li>
+                        <li class="list-group-item p-2"><i class="fab fa-cc-paypal fa-3x"></i></li>
+                    </ul>
+                    <ul class="list-group list-group-flush  d-flex flex-row mx-auto" style="color: #156145">
+                        <li class="list-group-item p-2"><i class="fab fa-cc-amazon-pay fa-3x"></i></li>
+                        <li class="list-group-item p-2"><i class="fab fa-cc-mastercard fa-3x"></i></li>
+                        <li class="list-group-item p-2"><i class="fab fa-cc-amex fa-3x"></i></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-9">
+                <form th:action="@{'/search'}" method="get" class="form-inline col-12 pl-0 pr-0 mb-3 justify-content-between">
+                    <input type="text" class="form-control col-8" th:placeholder="#{label.placeholder}" name="name">
+                    <button class="col-3 btn text-white" style="background-color: #156145" th:text="#{button.search}"></button>
+                </form>
+                <div class="card" th:if="${basket!=null}">
+                    <div class="card-header" th:text="#{label.basket}"></div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col" th:text="#{label.item}"></th>
+                                <th scope="col" th:text="#{label.price}"></th>
+                                <th scope="col" th:text="#{label.amount}"></th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody th:each="it:${basket}">
+                            <tr>
+                                <form th:action="@{'/set_amount'}" method="post">
+                                    <input type="hidden" name="item_id" th:value="${it.getItems().getId()}">
+                                    <input type="hidden" name="basket_id" th:value="${it.getId()}">
+                                    <th scope="row" th:text="${it.getItems().getName()}"></th>
+                                    <td th:text="${it.getItems().getPrice()}"></td>
+                                    <td th:text="${it.getAmount()}"></td>
+                                    <td width="10%">
+                                        <button class="btn btn-sm btn-success" name="btn" value="increase">+</button>
+                                        <button class="btn btn-sm btn-danger float-right" name="btn" value="decrease">-</button>
+                                    </td>
+                                </form>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="total_price d-flex justify-content-between" >
+                            <p th:text="#{label.total}">:<span class="font-weight-bold" th:text="${'$' + total} "></span></p>
+                            <form th:action="@{'/manage_basket'}" method="post">
+                                <div class="d-flex">
+<!--                                    <button class="btn btn-sm btn-success mr-2" name="btn" value="check_in">CHECK IN</button>-->
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-sm btn-success mr-2" data-toggle="modal" data-target="#staticBackdrop" ><i class="fas fa-credit-card"> <span th:text="#{label.checkIn}"></span></i></button>
+                                    <button class="btn btn-sm btn-danger" name="btn" value="clear"><i class="far fa-trash-alt"> <span th:text="#{label.clearBasket}"></span></i></button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div class="payments d-flex justify-content-between w-95">
+                                            <i class="fab fa-cc-apple-pay fa-2x"></i>
+                                            <i class="fab fa-cc-visa fa-2x"></i>
+                                            <i class="fab fa-cc-paypal fa-2x"></i>
+                                            <i class="fab fa-cc-amazon-pay fa-2x"></i>
+                                            <i class="fab fa-cc-mastercard fa-2x"></i>
+                                            <i class="fab fa-cc-amex fa-2x"></i>
+                                        </div>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form th:action="@{'/order_data'}" method="post">
+                                        <div class="modal-body" >
+                                            <div class="form-group">
+                                                <label for="inputAddress" ><span th:text="#{label.FullName}"></span><span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="inputAddress" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputCard" ><span th:text="#{label.cardNumber}"></span><span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="inputCard" required>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputEmail4" ><span th:text="#{label.expiration}"></span><span class="text-danger">*</span></label>
+                                                    <input type="email" class="form-control" id="inputEmail4" required>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputPassword4" >CVV<span class="text-danger">*</span></label>
+                                                    <input type="password" class="form-control" id="inputPassword4" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button  class="btn btn-success" th:text="#{label.pay}"></button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.close}"></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+<!--                    <div class="card-footer">-->
+<!--                        <small class="text-muted"  th:if="${item.getStars()==5}" th:each="i:${#numbers.sequence(0,4)}"><i class="fas fa-star"></i></small>-->
+<!--                        <small class="text-muted"  th:if="${item.getStars()==4}" th:each="i:${#numbers.sequence(0,3)}"><i class="fas fa-star"></i></small>-->
+<!--                        <small class="text-muted"  th:if="${item.getStars()==3}" th:each="i:${#numbers.sequence(0,2)}"><i class="fas fa-star"></i></small>-->
+<!--                        <small class="text-muted"  th:if="${item.getStars()==2}" th:each="i:${#numbers.sequence(0,1)}"><i class="fas fa-star"></i></small>-->
+<!--                        <small class="text-muted"  th:if="${item.getStars()==1}" th:each="i:${#numbers.sequence(0,0)}"><i class="fas fa-star"></i></small>-->
+<!--                    </div>-->
+                </div>
+                <div class="text-center" th:if="${basket==null}">
+                    <h1 th:text="#{label.NullCard}"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/admin.html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<div class="col-9" layout:fragment="site_content">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+        <h1 class="h2" th:text="#{label.AllItems}"></h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addLanguage" th:text="#{button.add}">
+            </button>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="addLanguage" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form th:action="@{'/add_item'}" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel" th:text="#{label.addItem}"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label th:text="#{label.name}"></label>
+                            <input type="text" name="item_name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.description}">
+                            </label>
+                            <textarea name="item_description" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.price}">
+                            </label>
+                            <input type="text" name="item_price" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.rating}">
+                            </label>
+                            <input type="number" min="1" max="5" name="item_rating" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.picture_sml}">
+                            </label>
+                            <input type="text" name="item_small_picture" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.picture_lrg}">
+                            </label>
+                            <input type="text" name="item_large_picture" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.inTopPage}">
+                            </label>
+                            <select name="in_top">
+                                <option value="1" th:text="#{label.yes}"></option>
+                                <option value="0" th:text="#{label.no}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label th:text="#{label.brand}">
+                            </label>
+                            <select name="brand" class="form-control">
+                                <option th:each="b:${brands}" th:text="${b.getName() + ' - ' + b.getCountry().getName()}" th:value="${b.getId()}"></option>
+                            </select>
+                        </div>
+<!--                        <div class="form-group">-->
+<!--                            <label th:text="#{label.category}">-->
+<!--                            </label>-->
+<!--                            <select name="category" class="form-control" multiple="multiple" >-->
+<!--                                <option th:each="c:${categories}" th:text="${c.getName()}" th:value="${c.getId()}"></option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{label.close}"></button>
+                        <button  class="btn btn-success" name="add_item" value="add" th:text="#{button.add}"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive-xl">
+        <table class="table table-striped">
+            <thead>
+            <tr style="text-align: center;">
+                <th>ID</th>
+                <th th:text="#{label.name}"></th>
+                <th th:text="#{label.price}">Price</th>
+                <th th:text="#{label.brand}">Brand</th>
+                <th th:text="#{label.details}">Details</th>
+            </tr>
+            </thead>
+            <tbody style="text-align: center;" th:each="it:${items}">
+            <tr>
+                <td th:text="${it.getId()}"></td>
+                <td th:text="${it.getName()}"></td>
+                <td th:text="${it.getPrice()}"></td>
+                <td th:text="${it.getBrand().getName()}"></td>
+                <td>
+<!--                    <button type="button"  class="btn-sm btn-success" data-toggle="modal" data-target="#editItem" th:attrappend="data-target=${it.getId()}" th:text="#{label.edit}">-->
+<!--                    </button>-->
+                    <a class="btn-sm btn-primary" th:href="@{'/edit_details/'+${it.getId()}}" th:text="#{label.edit}"></a>
+                    <button type="button"  class="btn-sm btn-danger" data-toggle="modal" data-target="#deleteItem" th:attrappend="data-target=${it.getId()}" th:text="#{button.delete}">
+                    </button>
+                </td>
+                <!-- Modal Edit -->
+                <div class="modal fade" id="editItem" th:attrappend="id=${it.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form th:action="@{'/edit_item'}" method="post">
+                            <input type="hidden" name="item_id" th:value="${it.getId()}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel_edit" th:text="#{label.editItem}"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label th:text="#{label.name}">
+
+                                        </label>
+                                        <input type="text" class="form-control" name="item_name" th:value="${it.getName()}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.description}">
+                                        </label>
+                                        <textarea name="item_description" class="form-control" th:text="${it.getDescription()}"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.price}">
+                                        </label>
+                                        <input type="text" class="form-control" name="item_price" th:value="${it.getPrice()}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.rating}">
+                                        </label>
+                                        <input type="number" min="1" max="5" name="item_rating" class="form-control"  th:value="${it.getStars()}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.picture_sml}">
+                                        </label>
+                                        <label><img th:src="${it.getSmall_picture_url()}"></label>
+                                        <input type="text"  name="item_sml_picture" class="form-control"  th:value="${it.getSmall_picture_url()}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.picture_lrg}">
+                                        </label>
+                                        <label><img th:src="${it.getLarge_picture_url()}"></label>
+                                        <input type="text"  name="item_lrg_picture" class="form-control"  th:value="${it.getLarge_picture_url()}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.inTopPage}">
+                                        </label>
+                                        <select class="form-group" name="in_top">
+                                            <option value="1" th:text="#{label.yes}"></option>
+                                            <option value="0" th:text="#{label.no}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{label.brand}"></label>
+                                        <select name="brand_id" class="form-control">
+                                            <option th:each="b:${brands}" th:text="${b.getName() + ' - ' + b.getCountry().getName()}" th:value="${b.getId()}" th:selected="${it.getBrand().getId()==b.getId()}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{label.close}"></button>
+                                    <button type="submit" class="btn btn-success" name="edit_btn" value="edit" th:text="#{label.edit}"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Modal Delete -->
+                <div class="modal fade" id="deleteItem" th:attrappend="id=${it.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form th:action="@{'/delete_item'}" method="post">
+                            <input type="hidden" name="item_id" th:value="${it.getId()}">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel_delete"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" th:text="#{button.delete}+' '+${it.getName()}+'?'">
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{label.close}"></button>
+                                    <button  class="btn btn-primary" name="delete_btn" value="delete" th:text="#{label.yes}">Yes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</html>
